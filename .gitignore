@@ -1,0 +1,14 @@
+﻿################################################################################
+# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
+################################################################################
+!.gitignore
+
+/packages
+!/packages/repositories.config
+/MvcMusicStore/bin
+/MvcMusicStore/obj
+/MvcMusicStore.Models/bin
+/MvcMusicStore.Models/obj
+/MvcMusicStore.Models.Tests/bin
+/MvcMusicStore.Models.Tests/obj
+/Backup

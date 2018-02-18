@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" namespace="MvcMusicStore.Models" assembly="MvcMusicStore.Models">
+  <class name="CartItem" optimistic-lock="dirty" dynamic-update="true">
+    <id name="Id">
+      <generator class="hilo">
+      </generator>
+    </id>
+    <property name="Count" not-null="true"></property>
+    <many-to-one name="Album"></many-to-one>
+  </class>
+</hibernate-mapping>

@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" namespace="MvcMusicStore.Models" assembly="MvcMusicStore.Models">
+  <class name="Genre" optimistic-lock="dirty" dynamic-update="true">
+    <id name="Id">
+      <generator class="hilo">
+      </generator>
+    </id>
+    <property name ="Name" not-null="true" index="GENRENAME_INDEX"></property>
+    <property name="Description"></property>
+    <set name="Albums" cascade="save-update" inverse="true" batch-size="100">
+      <key column="GenreId"/>
+      <one-to-many class="Album"/>
+    </set>
+  </class>
+</hibernate-mapping>

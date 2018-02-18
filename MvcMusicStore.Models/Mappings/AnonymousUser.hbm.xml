@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" namespace="MvcMusicStore.Models" assembly="MvcMusicStore.Models">
+  <class name="AnonymousUser" dynamic-update="true">
+    <id name="Id">
+      <generator class="hilo">
+      </generator>
+    </id>
+    <property name="LatestAddress" not-null="true"></property>
+    <property name="Role" not-null="true" type="NHibernate.Type.EnumStringType`1[[MvcMusicStore.Models.Enums.Roles,MvcMusicStore.Models]], NHibernate" />
+    <set name="Items" cascade="all-delete-orphan" batch-size="100">
+      <key column="UserId" not-null="true" unique="true" update="false"/>
+      <one-to-many class="CartItem"/>
+    </set>
+  </class>
+  <joined-subclass name="RegisteredUser" extends="AnonymousUser">
+    <key column="Id"></key>
+    <property name="Username" not-null="true"></property>
+    <property name="Password" not-null="true"></property>
+    <property name="Question"></property>
+    <property name="Answer"></property>
+    <property name="Email" not-null="true"></property>
+    <set name="Orders" cascade="save-update" inverse="true" batch-size="100">
+      <key column="UserId"/>
+      <one-to-many class="Order"/>
+    </set>
+  </joined-subclass>
+</hibernate-mapping>
