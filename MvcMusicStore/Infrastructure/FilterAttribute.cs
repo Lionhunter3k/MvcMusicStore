@@ -34,13 +34,21 @@ namespace MvcMusicStore.Infrastructure
         }
     }
 
-    public abstract class AbstractFilter : IActionFilter,IResultFilter
+    public abstract class AbstractFilter : IActionFilter, IResultFilter, IExceptionFilter, IAuthorizationFilter
     {
         public virtual void OnActionExecuted(ActionExecutedContext filterContext)
         {
         }
 
         public virtual void OnActionExecuting(ActionExecutingContext filterContext)
+        {
+        }
+
+        public virtual void OnAuthorization(AuthorizationContext filterContext)
+        {
+        }
+
+        public virtual void OnException(ExceptionContext filterContext)
         {
         }
 
@@ -53,7 +61,7 @@ namespace MvcMusicStore.Infrastructure
         }
     }
 
-    public class CustomFilterAttribute : ActionFilterAttribute
+    public class CustomFilterAttribute : ActionFilterAttribute, IExceptionFilter, IAuthorizationFilter
     {
         protected Type serviceType;
 
@@ -111,6 +119,32 @@ namespace MvcMusicStore.Infrastructure
             try
             {
                 filter.OnResultExecuting(filterContext);
+            }
+            finally
+            {
+                Factory.Release(filter);
+            }
+        }
+
+        public void OnException(ExceptionContext filterContext)
+        {
+            var filter = Factory.Resolve(serviceType);
+            try
+            {
+                filter.OnException(filterContext);
+            }
+            finally
+            {
+                Factory.Release(filter);
+            }
+        }
+
+        public void OnAuthorization(AuthorizationContext filterContext)
+        {
+            var filter = Factory.Resolve(serviceType);
+            try
+            {
+                filter.OnAuthorization(filterContext);
             }
             finally
             {
