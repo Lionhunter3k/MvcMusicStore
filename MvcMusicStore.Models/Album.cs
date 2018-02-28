@@ -1,5 +1,5 @@
-﻿using Iesi.Collections.Generic;
-using System;
+﻿using System;
+using System.Collections.Generic;
 
 namespace MvcMusicStore.Models
 {
@@ -7,7 +7,7 @@ namespace MvcMusicStore.Models
     {
         public Album()
         {
-            this.OrderDetails = new HashedSet<OrderDetail>();
+            this.OrderDetails = new HashSet<OrderDetail>();
         }
 
         public virtual string Title { get; set; }//convention to map all nullable properties as non-nullable in DB

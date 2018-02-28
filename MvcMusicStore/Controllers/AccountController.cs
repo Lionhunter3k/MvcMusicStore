@@ -14,11 +14,12 @@ using MvcMusicStore.Controllers;
 using MvcMusicStore.Filters;
 using System.Security.Principal;
 using MvcMusicStore.Infrastructure.Persistence;
+using NHibernate.Util;
 
 namespace Mvc3ToolsUpdateWeb_Default.Controllers
 {
     [UserWatcher(Order = 5)]
-    [CustomFilter(typeof(NHibernateSession<StatefulSessionWrapper>),Order=0)] 
+    [CustomFilter(typeof(NHibernateSession<StatefulSessionWrapper>),Order=0)]
     public class AccountController : NHibernateBaseController<PrincipalAdapter<int,MvcMusicStore.Models.Enums.Roles>>
     {
         //

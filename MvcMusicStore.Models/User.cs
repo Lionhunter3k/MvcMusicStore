@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Text;
 using MvcMusicStore.Models.Enums;
-using Iesi.Collections.Generic;
+using System.Collections.Generic;
 
 namespace MvcMusicStore.Models
 {
@@ -10,13 +10,13 @@ namespace MvcMusicStore.Models
     {
         public AnonymousUser()
         {
-            this.Items = new HashedSet<CartItem>();
+            this.Items = new HashSet<CartItem>();
         }
 
         public virtual ISet<CartItem> Items { get; set; }
 
         public virtual Roles Role { get; set; }
-        
+
         public virtual string LatestAddress { get; set; }
 
     }
@@ -26,7 +26,7 @@ namespace MvcMusicStore.Models
     {
         public RegisteredUser()
         {
-            this.Orders = new HashedSet<Order>();
+            this.Orders = new HashSet<Order>();
         }
 
         public virtual string Username { get; set; }

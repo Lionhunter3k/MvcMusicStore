@@ -1,5 +1,5 @@
 ﻿using System;
-using Iesi.Collections.Generic;
+using System.Collections.Generic;
 
 namespace MvcMusicStore.Models
 {
@@ -7,7 +7,7 @@ namespace MvcMusicStore.Models
     {
         public Order()
         {
-            this.OrderDetails = new HashedSet<OrderDetail>();
+            this.OrderDetails = new HashSet<OrderDetail>();
         }
 
         public virtual DateTime OrderDate { get; set; }
