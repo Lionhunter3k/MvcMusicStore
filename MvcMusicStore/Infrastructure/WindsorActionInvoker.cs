@@ -7,6 +7,7 @@ using Castle.Windsor;
 using Castle.MicroKernel;
 using System.Reflection;
 using Castle.MicroKernel.ComponentActivator;
+using System.Collections;
 
 namespace MvcMusicStore.Infrastructure
 {
@@ -19,17 +20,31 @@ namespace MvcMusicStore.Infrastructure
             this.container = container;
         }
 
-        protected override ActionExecutedContext InvokeActionMethodWithFilters(
-                ControllerContext controllerContext,
-                IList<IActionFilter> filters,
-                ActionDescriptor actionDescriptor,
-                IDictionary<string, object> parameters)
+        protected override FilterInfo GetFilters(ControllerContext controllerContext, ActionDescriptor actionDescriptor)
         {
-            foreach (IActionFilter actionFilter in filters)
+            var filters = base.GetFilters(controllerContext, actionDescriptor);
+            var injectedFilters = new HashSet<object>();
+            foreach (var filter in filters.ActionFilters)
             {
-                container.InjectProperties(actionFilter);
+                if(injectedFilters.Add(filter))
+                    container.InjectProperties(filter);
             }
-            return base.InvokeActionMethodWithFilters(controllerContext, filters, actionDescriptor, parameters);
+            foreach (var filter in filters.AuthorizationFilters)
+            {
+                if (injectedFilters.Add(filter))
+                    container.InjectProperties(filter);
+            }
+            foreach (var filter in filters.ExceptionFilters)
+            {
+                if (injectedFilters.Add(filter))
+                    container.InjectProperties(filter);
+            }
+            foreach (var filter in filters.ResultFilters)
+            {
+                if (injectedFilters.Add(filter))
+                    container.InjectProperties(filter);
+            }
+            return filters;
         }
     }
 
