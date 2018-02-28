@@ -59,8 +59,7 @@ namespace MvcMusicStore.Controllers
         {
             // Remove the item from the cart
             var user = NHibernateSession.Get<AnonymousUser>(TypedSession.UserId);
-            var removedAlbum = NHibernateSession.Get<Album>(id);
-            var cartItem = user.Items.Single(p => p.Album == removedAlbum);
+            var cartItem = user.Items.Single(p => p.Id == id);
             // Remove from cart
             if (cartItem.Count == 1)
             {
@@ -71,7 +70,7 @@ namespace MvcMusicStore.Controllers
             // Display the confirmation message
             var results = new ShoppingCartRemoveViewModel
             {
-                Message = Server.HtmlEncode(removedAlbum.Title) + " has been removed from your shopping cart.",
+                Message = Server.HtmlEncode(cartItem.Album.Title) + " has been removed from your shopping cart.",
                 CartTotal = user.Items.Select(p=> new { price = p.Count * p.Album.Price}).Sum(p=>p.price),
                 CartCount = user.Items.Sum(p=>p.Count),
                 ItemCount = 10,

@@ -270,13 +270,13 @@
     <Content Include="Views\Store\GenreMenu.cshtml" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Views\Shared\NotAllowedWithThisRole.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
     <ProjectReference Include="..\MvcMusicStore.Models\MvcMusicStore.Models.csproj">
       <Project>{D012CFB8-E36A-4CC3-9B48-1719DD539D30}</Project>
       <Name>MvcMusicStore.Models</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\Shared\NotAllowedWithThisRole.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

@@ -8,7 +8,7 @@
     <property name="LatestAddress" not-null="true"></property>
     <property name="Role" not-null="true" type="NHibernate.Type.EnumStringType`1[[MvcMusicStore.Models.Enums.Roles,MvcMusicStore.Models]], NHibernate" />
     <set name="Items" cascade="all-delete-orphan" batch-size="100">
-      <key column="UserId" not-null="true" unique="true" update="false"/>
+      <key column="UserId" not-null="true" update="false"/>
       <one-to-many class="CartItem"/>
     </set>
   </class>
