@@ -6,8 +6,6 @@
 /packages
 /.vs
 !/packages/repositories.config
-*/**/bin/Debug
-*/**/bin/Release
-*/**/obj/Debug
-*/**/obj/Release
+*/**/bin
+*/**/obj
 /Backup
