@@ -11,7 +11,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Schema", "Schema", "{2E5A2E
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MvcMusicStore", "MvcMusicStore\MvcMusicStore.csproj", "{32DCD27D-A84C-4250-B657-408B3620A9AC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MvcMusicStore.Models", "MvcMusicStore.Models\MvcMusicStore.Models.csproj", "{D012CFB8-E36A-4CC3-9B48-1719DD539D30}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MvcMusicStore.Models", "MvcMusicStore.Models\MvcMusicStore.Models.csproj", "{D012CFB8-E36A-4CC3-9B48-1719DD539D30}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MvcMusicStore.Models.Tests", "MvcMusicStore.Models.Tests\MvcMusicStore.Models.Tests.csproj", "{D555D1AE-827D-4F6D-A896-7BC382DA705C}"
 EndProject
@@ -19,6 +19,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 	ProjectSection(SolutionItems) = preProject
 		Readme.md = Readme.md
 	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoreMusicStore", "CoreMusicStore\CoreMusicStore.csproj", "{1C52C0BA-96F1-4DBC-9D20-F1CC88AF433C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -38,6 +40,10 @@ Global
 		{D555D1AE-827D-4F6D-A896-7BC382DA705C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D555D1AE-827D-4F6D-A896-7BC382DA705C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D555D1AE-827D-4F6D-A896-7BC382DA705C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1C52C0BA-96F1-4DBC-9D20-F1CC88AF433C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1C52C0BA-96F1-4DBC-9D20-F1CC88AF433C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1C52C0BA-96F1-4DBC-9D20-F1CC88AF433C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1C52C0BA-96F1-4DBC-9D20-F1CC88AF433C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
