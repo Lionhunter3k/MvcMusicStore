@@ -4,11 +4,10 @@
 !.gitignore
 
 /packages
+/.vs
 !/packages/repositories.config
-/MvcMusicStore/bin
-/MvcMusicStore/obj
-/MvcMusicStore.Models/bin
-/MvcMusicStore.Models/obj
-/MvcMusicStore.Models.Tests/bin
-/MvcMusicStore.Models.Tests/obj
+*/**/bin/Debug
+*/**/bin/Release
+*/**/obj/Debug
+*/**/obj/Release
 /Backup
