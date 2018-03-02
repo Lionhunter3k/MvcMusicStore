@@ -1,34 +1,35 @@
 ﻿using CoreMusicStore.Infrastructure.Persistence;
 using Microsoft.AspNetCore.Mvc.Filters;
 using System;
+using System.Threading.Tasks;
 
 namespace CoreMusicStore.Filters
 {
-    public class NHibernateSession<T> : IActionFilter where T : ISessionWrapper
+    public class NHibernateSession<T> : IAsyncActionFilter where T : ISessionWrapper
     {
         public NHibernateSession(T session)
         {
-            this.Session = session;
+            this._session = session;
         }
 
-        private readonly T Session;
+        private readonly T _session;
 
-        public void OnActionExecuting(ActionExecutingContext filterContext)
+        public async Task OnActionExecutionAsync(ActionExecutingContext context,
+             ActionExecutionDelegate next)
         {
-            Session.BeginTransaction();
-        }
-
-        public void OnActionExecuted(ActionExecutedContext filterContext)
-        {
-            if (Session.Transaction == null || !Session.Transaction.IsActive)
-                throw new NullReferenceException("Transaction is null or not active");
-            if (filterContext.Exception != null)
+            if (_session.Transaction != null && _session.Transaction.IsActive)
+                return;
+            _session.BeginTransaction();
+            var executedContext = await next();
+            if (_session.Transaction == null || !_session.Transaction.IsActive)
+                return;
+            if (executedContext.Exception != null)
             {
-                Session.Transaction.Rollback();
+                await _session.Transaction.RollbackAsync();
             }
             else
             {
-                Session.Transaction.Commit();
+                await _session.Transaction.CommitAsync();
             }
         }
     }

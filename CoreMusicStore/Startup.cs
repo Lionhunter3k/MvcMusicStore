@@ -1,6 +1,7 @@
 ﻿using Autofac;
 using CoreMusicStore.Infrastructure;
 using CoreMusicStore.Infrastructure.Persistence;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -59,15 +60,31 @@ namespace CoreMusicStore
                 .AddDataAnnotations()
                 .AddFormatterMappings()
                 .AddJsonFormatters();
+
+            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+              .AddCookie(options =>
+              {
+                  // Cookie settings
+                  options.Cookie.HttpOnly = true;
+                  options.Cookie.Expiration = TimeSpan.FromDays(150);
+                  options.LoginPath = "/Account/Login"; // If the LoginPath is not set here, ASP.NET Core will default to /Account/Login
+                  options.LogoutPath = "/Account/Logout"; // If the LogoutPath is not set here, ASP.NET Core will default to /Account/Logout
+                  // If the AccessDeniedPath is not set here, ASP.NET Core will default to /Account/AccessDenied
+                  options.SlidingExpiration = true;
+              });
+
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
         }
 
         public override void Configure(IApplicationBuilder app)
         {
+            //if we have an uncaught error, we should display the detailed error page if the request is local
             app.MapWhen(context => context.Request.IsLocal(), localApp =>
             {
                 localApp.UseDeveloperExceptionPage();
             });
 
+            //otherwise, we should show a friendly error page that doesn't try to load too much stuff that might be broken
             app.MapWhen(context => !context.Request.IsLocal(), remoteApp =>
             {
                 app.UseExceptionHandler(exceptionApp =>
@@ -85,16 +102,18 @@ namespace CoreMusicStore
             app.UseStaticFiles(new StaticFileOptions
             {
                 FileProvider = new PhysicalFileProvider(
-                  Path.Combine(Environment.ContentRootPath, "Content")),
+                  Path.Combine(Environment.WebRootPath, "Content")),
                 RequestPath = "/Content"
             });
 
             app.UseStaticFiles(new StaticFileOptions
             {
                 FileProvider = new PhysicalFileProvider(
-                Path.Combine(Environment.ContentRootPath, "Scripts")),
+                Path.Combine(Environment.WebRootPath, "Scripts")),
                 RequestPath = "/Scripts"
             });
+
+            app.UseAuthentication();
 
             app.UseMvc(routes =>
             {
