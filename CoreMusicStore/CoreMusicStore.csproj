@@ -45,6 +45,7 @@
     <None Remove="Views\Account\ChangePasswordSuccess.cshtml" />
     <None Remove="Views\Account\LogOn.cshtml" />
     <None Remove="Views\Account\Register.cshtml" />
+    <None Remove="Views\Home\Index.cshtml" />
     <None Remove="Views\Shared\_Layout.cshtml" />
   </ItemGroup>
 
@@ -84,6 +85,7 @@
     <Content Include="Views\Account\ChangePasswordSuccess.cshtml" />
     <Content Include="Views\Account\LogOn.cshtml" />
     <Content Include="Views\Account\Register.cshtml" />
+    <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
   </ItemGroup>
 
