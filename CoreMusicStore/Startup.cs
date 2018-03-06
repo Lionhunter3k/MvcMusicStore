@@ -72,8 +72,8 @@ namespace CoreMusicStore
                   // If the AccessDeniedPath is not set here, ASP.NET Core will default to /Account/AccessDenied
                   options.SlidingExpiration = true;
               });
-
-            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+            //uncomment this line if we have a singleton which might be called from a HTTP request
+            //services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
         }
 
         public override void Configure(IApplicationBuilder app)

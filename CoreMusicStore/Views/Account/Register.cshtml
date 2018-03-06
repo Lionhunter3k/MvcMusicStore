@@ -1,0 +1,60 @@
+﻿@model RegisterViewModel
+
+@{
+    ViewBag.Title = "Register";
+}
+
+<h2>Create a New Account</h2>
+<p>
+    Use the form below to create a new account. 
+</p>
+<p>
+    Passwords are required to be a minimum of 1 characters in length.
+</p>
+
+<form>
+    <div asp-validation-summary="ModelOnly">
+        <span>Account creation was unsuccessful. Please correct the errors and try again.</span>
+    </div>
+    <div>
+        <fieldset>
+            <legend>Account Information</legend>
+
+            <div class="editor-label">
+                <label asp-for="UserName"></label>
+            </div>
+            <div class="editor-field">
+                <input asp-for="UserName" />
+                <span asp-validation-for="UserName"></span>
+            </div>
+
+            <div class="editor-label">
+                <label asp-for="Email"></label>
+            </div>
+            <div class="editor-field">
+                <input asp-for="Email" />
+                <span asp-validation-for="Email"></span>
+            </div>
+
+            <div class="editor-label">
+                <label asp-for="Password"></label>
+            </div>
+            <div class="editor-field">
+                <input type="password" asp-for="Password" />
+                <span asp-validation-for="Password"></span>
+            </div>
+
+            <div class="editor-label">
+                <label asp-for="ConfirmPassword"></label>
+            </div>
+            <div class="editor-field">
+                <input type="password" asp-for="ConfirmPassword" />
+                <span asp-validation-for="Password"></span>
+            </div>
+
+            <p>
+                <input type="submit" value="Register" />
+            </p>
+        </fieldset>
+    </div>
+</form>

@@ -44,6 +44,7 @@ namespace CoreMusicStore.Controllers
         // POST: /Account/LogOn
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<ActionResult> LogOn(LogOnViewModel model, string returnUrl)
         {
             if (!User.Identity.IsAuthenticated)
@@ -54,7 +55,7 @@ namespace CoreMusicStore.Controllers
                     if (user != null)
                     {
                         await _userService.CopyCartItemsFromAnonymousUserAsync(user);
-                        await SetCredentials(user);
+                        await SetCredentialsAsync(user);
                         if (Url.IsLocalUrl(returnUrl) && returnUrl.Length > 1 && returnUrl.StartsWith("/")
                            && !returnUrl.StartsWith("//") && !returnUrl.StartsWith("/\\"))
                         {
@@ -76,7 +77,7 @@ namespace CoreMusicStore.Controllers
             }
         }
 
-        private async Task SetCredentials(AnonymousUser user)
+        private async Task SetCredentialsAsync(AnonymousUser user)
         {
             var claims = new List<Claim>
                 {
@@ -95,7 +96,7 @@ namespace CoreMusicStore.Controllers
         public async Task<ActionResult> LogOff()
         {
             var anonymousUser = await _userService.GetOrCreateAnonymousUserAsync();
-            await SetCredentials(anonymousUser);
+            await SetCredentialsAsync(anonymousUser);
             return RedirectToAction("Index", "Home");
         }
 
@@ -111,6 +112,7 @@ namespace CoreMusicStore.Controllers
         // POST: /Account/Register
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<ActionResult> Register(RegisterViewModel model)
         {
             if (!this.User.Identity.IsAuthenticated)
@@ -124,7 +126,7 @@ namespace CoreMusicStore.Controllers
                         var newRegisteredUser = new RegisteredUser { Username = model.UserName, Password = model.Password, Role = role, Email = model.Email, LatestAddress = HttpContext.Connection.RemoteIpAddress.ToString() };
                         await _session.SaveAsync(newRegisteredUser);
                         await _userService.CopyCartItemsFromAnonymousUserAsync(newRegisteredUser);
-                        await SetCredentials(newRegisteredUser);
+                        await SetCredentialsAsync(newRegisteredUser);
                         return RedirectToAction("Index", "Home");
                     }
                     else
@@ -155,6 +157,7 @@ namespace CoreMusicStore.Controllers
         // POST: /Account/ChangePassword
         [Authorize]
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<ActionResult> ChangePassword(ChangePasswordViewModel model)
         {
             if (ModelState.IsValid)
