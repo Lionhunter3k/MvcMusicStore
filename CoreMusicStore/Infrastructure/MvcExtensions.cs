@@ -91,7 +91,7 @@ namespace CoreMusicStore.Infrastructure
             return mvcServiceBuilder;
         }
 
-        public static unsafe void AddReferencesCore<TObject>(this RazorViewEngineOptions options)
+        public static unsafe ICollection<MetadataReference> AddReferencesFromAssemblyOf<TObject>(this ICollection<MetadataReference> references)
         {
             Assembly assembly = typeof(TObject).GetTypeInfo().Assembly;
             // See http://www.strathweb.com/2016/03/roslyn-scripting-on-coreclr-net-cli-and-dnx-and-in-memory-assemblies/
@@ -100,7 +100,8 @@ namespace CoreMusicStore.Infrastructure
                 var moduleMetadata = ModuleMetadata.CreateFromMetadata((IntPtr)b, length);
                 var assemblyMetadata = AssemblyMetadata.Create(moduleMetadata);
                 var result = assemblyMetadata.GetReference();
-                options.AdditionalCompilationReferences.Add(result);
+                references.Add(result);
+                return references;
             }
             else
             {
