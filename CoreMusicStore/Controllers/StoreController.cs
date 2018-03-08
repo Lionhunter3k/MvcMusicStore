@@ -35,7 +35,7 @@ namespace CoreMusicStore.Controllers
         public async Task<ActionResult> Browse(string genre)
         {
             // Retrieve Genre and its Associated Albums from database
-            var genreModel = _session.Query<Genre>().FetchMany(p=>p.Albums).Single(p=>p.Name == genre);
+            var genreModel = await _session.Query<Genre>().FetchMany(p=>p.Albums).SingleAsync(p=>p.Name == genre);
             return View(genreModel);
         }
 
