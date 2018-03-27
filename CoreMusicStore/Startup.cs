@@ -87,7 +87,7 @@ namespace CoreMusicStore
             //otherwise, we should show a friendly error page that doesn't try to load too much stuff that might be broken
             app.MapWhen(context => !context.Request.IsLocal(), remoteApp =>
             {
-                app.UseExceptionHandler(exceptionApp =>
+                remoteApp.UseExceptionHandler(exceptionApp =>
                 {
                     exceptionApp.Use((context, next) =>
                     {
