@@ -50,12 +50,13 @@ namespace CoreMusicStore
                 .AddViews()
                 .AddRazorViewEngine(options =>
                 {
-                    options.AddReferencesCore<object>();
-                    options.AddReferencesCore<Startup>();
-                    options.AddReferencesCore<UrlResolutionTagHelper>();
-                    options.AddReferencesCore<InputTagHelper>();
-                    options.AddReferencesCore<HashSet<object>>();
-                    options.AddReferencesCore<Microsoft.AspNetCore.Mvc.Razor.Compilation.RazorViewAttribute>();
+                    options.AdditionalCompilationReferences
+                        .AddReferencesFromAssemblyOf<object>()
+                        .AddReferencesFromAssemblyOf<Startup>()
+                        .AddReferencesFromAssemblyOf<UrlResolutionTagHelper>()
+                        .AddReferencesFromAssemblyOf<InputTagHelper>()
+                        .AddReferencesFromAssemblyOf<HashSet<object>>()
+                        .AddReferencesFromAssemblyOf<Microsoft.AspNetCore.Mvc.Razor.Compilation.RazorViewAttribute>();
                 })
                 .AddDataAnnotations()
                 .AddFormatterMappings()
