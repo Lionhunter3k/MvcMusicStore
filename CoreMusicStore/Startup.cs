@@ -60,7 +60,8 @@ namespace CoreMusicStore
                 })
                 .AddDataAnnotations()
                 .AddFormatterMappings()
-                .AddJsonFormatters();
+                .AddJsonFormatters()
+                .AddAuthorization();
 
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
               .AddCookie(options =>
