@@ -42,9 +42,9 @@ namespace CoreMusicStore.Controllers
         //
         // GET: /Store/Details/5
 
-        public ActionResult Details(int id)
+        public async Task<ActionResult> Details(int id)
         {
-            var album = _session.Get<Album>(id);
+            var album = await _session.GetAsync<Album>(id);
 
             return View(album);
         }

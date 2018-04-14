@@ -1,0 +1,59 @@
+﻿@model MvcMusicStore.Models.Album
+
+@{
+    ViewBag.Title = "Edit";
+    IEnumerable<SelectListItem> genres = ViewBag.Genres;
+    IEnumerable<SelectListItem> artists = ViewBag.Artists;
+}
+
+<h2>Edit</h2>
+
+<form>
+    <div asp-validation-summary="ModelOnly">
+    </div>
+    <fieldset>
+        <legend>Album</legend>
+        <input type="hidden" asp-for="Id" />
+        <div class="editor-label">
+            <label asp-for="Genre.Id">Genre</label>
+        </div>
+        <div class="editor-field">
+            <select asp-for="Genre.Id" asp-items="genres"></select>
+            <span asp-validation-for="Genre.Id"></span>
+        </div>
+        <div class="editor-label">
+            <label asp-for="Artist.Id">Artist</label>
+        </div>
+        <div class="editor-field">
+            <select asp-for="Artist.Id" asp-items="artists"></select>
+            <span asp-validation-for="Artist.Id"></span>
+        </div>
+        <div class="editor-label">
+            <label asp-for="Title">Title</label>
+        </div>
+        <div class="editor-field">
+            <input asp-for="Title" />
+            <span asp-validation-for="Title"></span>
+        </div>
+        <div class="editor-label">
+            <label asp-for="Price">Price</label>
+        </div>
+        <div class="editor-field">
+            <input asp-for="Price" />
+            <span asp-validation-for="Price"></span>
+        </div>
+        <div class="editor-label">
+            <input asp-for="AlbumArtUrl" />
+        </div>
+        <div class="editor-field">
+            <input asp-for="AlbumArtUrl" />
+            <span asp-validation-for="AlbumArtUrl"></span>
+        </div>
+        <p>
+            <input type="submit" value="Save" />
+        </p>
+    </fieldset>
+</form>
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
