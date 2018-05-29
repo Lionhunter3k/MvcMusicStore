@@ -7,7 +7,9 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Razor.TagHelpers;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.TagHelpers;
+using Microsoft.AspNetCore.Razor.TagHelpers;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
@@ -33,7 +35,7 @@ namespace CoreMusicStore
         {
             return services.AddAutofacProvider(builder =>
             {
-                builder.RegisterModule(new NHibernateModule<MsSql2008Dialect, SqlClientDriver>() { RootPath = Environment.ContentRootPath }.AddAssemblyFor<RegisteredUser>());
+                builder.RegisterModule(new XMLNhibernateModule() { RootPath = Environment.ContentRootPath });
             });
         }
 
@@ -56,6 +58,9 @@ namespace CoreMusicStore
                         .AddReferencesFromAssemblyOf<UrlResolutionTagHelper>()
                         .AddReferencesFromAssemblyOf<InputTagHelper>()
                         .AddReferencesFromAssemblyOf<HashSet<object>>()
+                        .AddReferencesFromAssemblyOf<TagHelper>()
+                        .AddReferencesFromAssemblyOf<ViewContext>()
+                        .AddReferencesFromAssemblyOf<ActionContext>()
                         .AddReferencesFromAssemblyOf<Microsoft.AspNetCore.Mvc.Razor.Compilation.RazorViewAttribute>();
                 })
                 .AddDataAnnotations()

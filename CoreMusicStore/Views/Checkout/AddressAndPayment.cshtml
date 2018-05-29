@@ -1,0 +1,26 @@
+﻿@model OrderViewModel
+
+@{
+    ViewBag.Title = "Address And Payment";
+}
+<form>
+    <h2>Address And Payment</h2>
+    <fieldset>
+        <legend>Shipping Information</legend>
+
+        @Html.EditorForModel()
+    </fieldset>
+    <fieldset>
+        <legend>Payment</legend>
+        <p>We're running a promotion: all music is free with the promo code: "FREE"</p>
+
+        <div class="editor-label">
+            <label asp-for="PromoCode">Promo Code</label>
+        </div>
+        <div class="editor-field">
+            <input asp-for="PromoCode" />
+        </div>
+    </fieldset>
+
+    <input type="submit" value="Submit Order" />
+</form>

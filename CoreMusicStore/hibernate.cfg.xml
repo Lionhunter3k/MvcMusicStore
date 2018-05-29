@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-configuration
+xmlns="urn:nhibernate-configuration-2.2">
+  <session-factory>
+    <property name="connection.driver_class">NHibernate.Driver.MySqlDataDriver</property>
+    <property name="dialect">NHibernate.Dialect.MySQL57Dialect</property>
+    <property name="connection.connection_string">Server=192.168.0.104;Database=TestDB;Uid=sa;Pwd=sa;SslMode=None</property>
+    <property name="adonet.batch_size">100</property>
+    <mapping assembly="MvcMusicStore.Models" />
+  </session-factory>
+</hibernate-configuration>

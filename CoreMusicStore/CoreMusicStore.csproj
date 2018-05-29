@@ -45,6 +45,8 @@
     <None Remove="Views\Account\ChangePasswordSuccess.cshtml" />
     <None Remove="Views\Account\LogOn.cshtml" />
     <None Remove="Views\Account\Register.cshtml" />
+    <None Remove="Views\Checkout\AddressAndPayment.cshtml" />
+    <None Remove="Views\Checkout\Complete.cshtml" />
     <None Remove="Views\Home\Index.cshtml" />
     <None Remove="Views\Shared\_Layout.cshtml" />
     <None Remove="Views\StoreManager\Create.cshtml" />
@@ -93,6 +95,8 @@
     <Content Include="Views\Account\ChangePasswordSuccess.cshtml" />
     <Content Include="Views\Account\LogOn.cshtml" />
     <Content Include="Views\Account\Register.cshtml" />
+    <Content Include="Views\Checkout\AddressAndPayment.cshtml" />
+    <Content Include="Views\Checkout\Complete.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Views\StoreManager\Create.cshtml" />
@@ -122,10 +126,6 @@
     <PackageReference Include="Microsoft.Extensions.Configuration.CommandLine" Version="2.0.0" />
     <PackageReference Include="NHibernate" Version="5.1.0" />
     <PackageReference Include="System.Configuration.ConfigurationManager" Version="4.4.1" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Scripts\" />
   </ItemGroup>
 
   <ItemGroup>
