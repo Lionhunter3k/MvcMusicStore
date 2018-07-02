@@ -83,7 +83,7 @@ namespace CoreMusicStore
                   options.SlidingExpiration = true;
               });
             //uncomment this line if we have a singleton which might be called from a HTTP request
-            //services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
         }
 
         public override void Configure(IApplicationBuilder app)

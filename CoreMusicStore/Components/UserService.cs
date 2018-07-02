@@ -19,10 +19,10 @@ namespace CoreMusicStore.Components
         private readonly NHibernate.ISession _session;
         private readonly HttpContext _httpContext;
 
-        public UserService(NHibernate.ISession session, HttpContext httpContext)
+        public UserService(NHibernate.ISession session, IHttpContextAccessor httpContext)
         {
             this._session = session;
-            this._httpContext = httpContext;
+            this._httpContext = httpContext.HttpContext;
         }
 
         public async Task<AnonymousUser> GetOrCreateAnonymousUserAsync()
