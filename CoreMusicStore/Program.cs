@@ -19,8 +19,9 @@ namespace CoreMusicStore
                         return;
                     config.AddCommandLine(args);
                 })
-                .UseDefaultServiceProvider((context, options) => options.ValidateScopes = true)
+                .UseDefaultServiceProvider((context, options) => options.ValidateScopes = context.HostingEnvironment.IsDevelopment())
                 .UseStartup<Startup>()
+                .UseUrls("http://localhost:5050")
                 .Build();
             host.Run();
         }

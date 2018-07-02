@@ -91,6 +91,30 @@ namespace CoreMusicStore.Infrastructure
             return mvcServiceBuilder;
         }
 
+        public static void AddReferencesFromRuntimeContext(this RazorViewEngineOptions options)
+        {
+            options.AdditionalCompilationReferences.AddReferencesFromRuntimeContext();
+        }
+
+        public static void AddReferencesFromRuntimeContext(this ICollection<MetadataReference> references)
+        {
+            var assemblies = AppDomain.CurrentDomain.GetAssemblies().ToList();
+            assemblies.Add(typeof(Microsoft.CSharp.RuntimeBinder.Binder).Assembly);
+            var refs = assemblies
+                .Where(x => !x.IsDynamic && !string.IsNullOrWhiteSpace(x.Location))
+                .Select(x => MetadataReference.CreateFromFile(x.Location))
+                .ToList();
+            foreach (var portableExecutableReference in refs)
+            {
+                references.Add(portableExecutableReference);
+            }
+        }
+
+        public static unsafe void AddReferencesFromAssemblyOf<TObject>(this RazorViewEngineOptions options)
+        {
+            options.AddReferencesFromAssemblyOf<TObject>();
+        }
+
         public static unsafe ICollection<MetadataReference> AddReferencesFromAssemblyOf<TObject>(this ICollection<MetadataReference> references)
         {
             Assembly assembly = typeof(TObject).GetTypeInfo().Assembly;

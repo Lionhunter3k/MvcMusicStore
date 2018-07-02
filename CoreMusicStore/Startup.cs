@@ -19,6 +19,8 @@ using NHibernate.Driver;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+using System.Reflection;
 
 namespace CoreMusicStore
 {
@@ -35,7 +37,17 @@ namespace CoreMusicStore
         {
             return services.AddAutofacProvider(builder =>
             {
-                builder.RegisterModule(new XMLNhibernateModule() { RootPath = Environment.ContentRootPath });
+                //nhibernate
+                var nhibernateModule = new XmlNhibernateModule() { RootPath = Environment.ContentRootPath, XmlCfgFileName = "hibernate.cfg.mssql.xml" };
+                nhibernateModule.SessionFactoryCreated += Seed.PopulateDatabase;
+                builder.RegisterModule(nhibernateModule);
+
+                //services
+                builder.RegisterAssemblyTypes(typeof(Startup).Assembly)
+                    .Where(c => (c.Namespace?.EndsWith("Components")).GetValueOrDefault() && c.GetInterfaces().Any(t => (t.Namespace?.EndsWith("Services")).GetValueOrDefault()))
+                    .As(c => c.GetInterfaces().Where(t => (t.Namespace?.EndsWith("Services")).GetValueOrDefault()))
+                    .PropertiesAutowired()
+                    .InstancePerLifetimeScope();
             });
         }
 
@@ -52,16 +64,7 @@ namespace CoreMusicStore
                 .AddViews()
                 .AddRazorViewEngine(options =>
                 {
-                    options.AdditionalCompilationReferences
-                        .AddReferencesFromAssemblyOf<object>()
-                        .AddReferencesFromAssemblyOf<Startup>()
-                        .AddReferencesFromAssemblyOf<UrlResolutionTagHelper>()
-                        .AddReferencesFromAssemblyOf<InputTagHelper>()
-                        .AddReferencesFromAssemblyOf<HashSet<object>>()
-                        .AddReferencesFromAssemblyOf<TagHelper>()
-                        .AddReferencesFromAssemblyOf<ViewContext>()
-                        .AddReferencesFromAssemblyOf<ActionContext>()
-                        .AddReferencesFromAssemblyOf<Microsoft.AspNetCore.Mvc.Razor.Compilation.RazorViewAttribute>();
+                    options.AddReferencesFromRuntimeContext();
                 })
                 .AddDataAnnotations()
                 .AddFormatterMappings()
@@ -89,6 +92,8 @@ namespace CoreMusicStore
             app.MapWhen(context => context.Request.IsLocal(), localApp =>
             {
                 localApp.UseDeveloperExceptionPage();
+
+                ConfigureApp(localApp);
             });
 
             //otherwise, we should show a friendly error page that doesn't try to load too much stuff that might be broken
@@ -104,19 +109,24 @@ namespace CoreMusicStore
 
                     exceptionApp.UseStaticFiles();
                 });
-            });
 
+                ConfigureApp(remoteApp);
+            });
+        }
+
+        private void ConfigureApp(IApplicationBuilder app)
+        {
             app.UseStaticFiles(new StaticFileOptions
             {
                 FileProvider = new PhysicalFileProvider(
-                  Path.Combine(Environment.WebRootPath, "Content")),
+                  Path.Combine(Environment.ContentRootPath, "Content")),
                 RequestPath = "/Content"
             });
 
             app.UseStaticFiles(new StaticFileOptions
             {
                 FileProvider = new PhysicalFileProvider(
-                Path.Combine(Environment.WebRootPath, "Scripts")),
+                Path.Combine(Environment.ContentRootPath, "Scripts")),
                 RequestPath = "/Scripts"
             });
 
