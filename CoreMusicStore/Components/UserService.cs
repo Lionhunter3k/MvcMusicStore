@@ -64,7 +64,7 @@ namespace CoreMusicStore.Components
             var anonymousUser = await GetCurrentAnonymousUserAsync();
             if (anonymousUser != null)
             {
-                anonymousUser.Items.Where(p => user.Items.Add(p)).ForEach(p => anonymousUser.Items.Remove(p));
+                anonymousUser.Items.Where(p => user.Items.Add(p)).ToList().ForEach(p => anonymousUser.Items.Remove(p));
                 await _session.DeleteAsync(anonymousUser);
             }
         }

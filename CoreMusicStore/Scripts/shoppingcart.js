@@ -12,7 +12,11 @@
                 function (data) {
                     // Successful requests get here
                     // Update the page elements
-                    $('#row-' + data.DeleteId).fadeOut('slow');
+                    if (data.ItemCount == 0) {
+                        $('#row-' + data.DeleteId).fadeOut('slow');
+                    } else {
+                        $('#item-count-' + data.DeleteId).text(data.ItemCount);
+                    }
 
                     $('#cart-total').text(data.CartTotal);
                     $('#update-message').text(data.Message);
