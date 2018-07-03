@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace MvcMusicStore.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = "Admin,User")]
     [TypeFilter(typeof(UserWatcherFilter), Order = 5)]
     [TypeFilter(typeof(NHibernateSession<StatefulSessionWrapper>), Order = 0)]
     public class CheckoutController : Controller

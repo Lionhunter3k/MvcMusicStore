@@ -83,7 +83,7 @@ namespace MvcMusicStore.Controllers
                 Message = cartItem.Album.Title + " has been removed from your shopping cart.",
                 CartTotal = user.Items.Select(p=> new { price = p.Count * p.Album.Price}).Sum(p=>p.price),
                 CartCount = user.Items.Sum(p=>p.Count),
-                ItemCount = 10,
+                ItemCount = user.Items.Count,
                 DeleteId = id
             };
 

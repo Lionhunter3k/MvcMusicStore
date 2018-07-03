@@ -14,6 +14,7 @@ using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
 using MvcMusicStore.Models;
+using Newtonsoft.Json.Serialization;
 using NHibernate.Dialect;
 using NHibernate.Driver;
 using System;
@@ -68,7 +69,10 @@ namespace CoreMusicStore
                 })
                 .AddDataAnnotations()
                 .AddFormatterMappings()
-                .AddJsonFormatters()
+                .AddJsonFormatters(settings =>
+                {
+                    settings.ContractResolver = new DefaultContractResolver();
+                })
                 .AddAuthorization();//this also calls services.AddAuthorization()
 
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
@@ -77,9 +81,10 @@ namespace CoreMusicStore
                   // Cookie settings
                   options.Cookie.HttpOnly = true;
                   options.Cookie.Expiration = TimeSpan.FromDays(150);
-                  options.LoginPath = "/Account/Login"; // If the LoginPath is not set here, ASP.NET Core will default to /Account/Login
-                  options.LogoutPath = "/Account/Logout"; // If the LogoutPath is not set here, ASP.NET Core will default to /Account/Logout
+                  options.LoginPath = "/Account/LogOn"; // If the LoginPath is not set here, ASP.NET Core will default to /Account/Login
+                  options.LogoutPath = "/Account/LogOff"; // If the LogoutPath is not set here, ASP.NET Core will default to /Account/Logout
                   // If the AccessDeniedPath is not set here, ASP.NET Core will default to /Account/AccessDenied
+                  options.AccessDeniedPath = "/Account/LogOn";
                   options.SlidingExpiration = true;
               });
             //uncomment this line if we have a singleton which might be called from a HTTP request
@@ -116,17 +121,19 @@ namespace CoreMusicStore
 
         private void ConfigureApp(IApplicationBuilder app)
         {
+            var contentFileProvider = new PhysicalFileProvider(
+                    Path.Combine(Environment.ContentRootPath, "Content"));
             app.UseStaticFiles(new StaticFileOptions
             {
-                FileProvider = new PhysicalFileProvider(
-                  Path.Combine(Environment.ContentRootPath, "Content")),
+                FileProvider = contentFileProvider,
                 RequestPath = "/Content"
             });
 
+            var scriptsFileProvider = new PhysicalFileProvider(
+                    Path.Combine(Environment.ContentRootPath, "Scripts"));
             app.UseStaticFiles(new StaticFileOptions
             {
-                FileProvider = new PhysicalFileProvider(
-                Path.Combine(Environment.ContentRootPath, "Scripts")),
+                FileProvider = scriptsFileProvider,
                 RequestPath = "/Scripts"
             });
 

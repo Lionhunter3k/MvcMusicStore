@@ -39,8 +39,8 @@ namespace CoreMusicStore.Filters
                     claims, CookieAuthenticationDefaults.AuthenticationScheme);
                 var userPrincipal = new ClaimsPrincipal(claimsIdentity);
                 await _authenticationService.SignInAsync(context.HttpContext, CookieAuthenticationDefaults.AuthenticationScheme, userPrincipal, new AuthenticationProperties { IsPersistent = true });
-                await next();
             }
+            await next();
         }
     }
 }

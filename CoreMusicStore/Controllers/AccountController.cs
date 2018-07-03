@@ -47,34 +47,27 @@ namespace CoreMusicStore.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> LogOn(LogOnViewModel model, string returnUrl)
         {
-            if (!User.Identity.IsAuthenticated)
+            if (ModelState.IsValid)
             {
-                if (ModelState.IsValid)
+                var user = this._session.Query<RegisteredUser>().SingleOrDefault(p => p.Username == model.UserName && p.Password == model.Password);
+                if (user != null)
                 {
-                    var user = this._session.Query<RegisteredUser>().SingleOrDefault(p => p.Username == model.UserName && p.Password == model.Password);
-                    if (user != null)
+                    await _userService.CopyCartItemsFromAnonymousUserAsync(user);
+                    await SetCredentialsAsync(user);
+                    if (Url.IsLocalUrl(returnUrl) && returnUrl.Length > 1 && returnUrl.StartsWith("/")
+                       && !returnUrl.StartsWith("//") && !returnUrl.StartsWith("/\\"))
                     {
-                        await _userService.CopyCartItemsFromAnonymousUserAsync(user);
-                        await SetCredentialsAsync(user);
-                        if (Url.IsLocalUrl(returnUrl) && returnUrl.Length > 1 && returnUrl.StartsWith("/")
-                           && !returnUrl.StartsWith("//") && !returnUrl.StartsWith("/\\"))
-                        {
-                            return Redirect(returnUrl);
-                        }
-                        else
-                            return RedirectToAction("Index", "Home");
+                        return Redirect(returnUrl);
                     }
                     else
-                    {
-                        ModelState.AddModelError("WrongUsernameOrPassword", "The user name or password provided is incorrect.");
-                    }
+                        return RedirectToAction("Index", "Home");
                 }
-                return View(model);
+                else
+                {
+                    ModelState.AddModelError("WrongUsernameOrPassword", "The user name or password provided is incorrect.");
+                }
             }
-            else
-            {
-                return new ViewResult { ViewName = "AlreadyLoggedIn" };
-            }
+            return View(model);
         }
 
         private async Task SetCredentialsAsync(AnonymousUser user)
@@ -115,33 +108,26 @@ namespace CoreMusicStore.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Register(RegisterViewModel model)
         {
-            if (!this.User.Identity.IsAuthenticated)
+            if (ModelState.IsValid)
             {
-                if (ModelState.IsValid)
+                // Attempt to register the user
+                if (!await _session.Query<RegisteredUser>().AnyAsync(p => p.Username == model.UserName || p.Email == model.Email))
                 {
-                    // Attempt to register the user
-                    if (!await _session.Query<RegisteredUser>().AnyAsync(p => p.Username == model.UserName || p.Email == model.Email))
-                    {
-                        Roles role = model.UserName == "Admin" ? Roles.Admin : Roles.User;
-                        var newRegisteredUser = new RegisteredUser { Username = model.UserName, Password = model.Password, Role = role, Email = model.Email, LatestAddress = HttpContext.Connection.RemoteIpAddress.ToString() };
-                        await _session.SaveAsync(newRegisteredUser);
-                        await _userService.CopyCartItemsFromAnonymousUserAsync(newRegisteredUser);
-                        await SetCredentialsAsync(newRegisteredUser);
-                        return RedirectToAction("Index", "Home");
-                    }
-                    else
-                    {
-                        ModelState.AddModelError("", "This username or email already exists");
-                    }
+                    Roles role = model.UserName == "Admin" ? Roles.Admin : Roles.User;
+                    var newRegisteredUser = new RegisteredUser { Username = model.UserName, Password = model.Password, Role = role, Email = model.Email, LatestAddress = HttpContext.Connection.RemoteIpAddress.ToString() };
+                    await _session.SaveAsync(newRegisteredUser);
+                    await _userService.CopyCartItemsFromAnonymousUserAsync(newRegisteredUser);
+                    await SetCredentialsAsync(newRegisteredUser);
+                    return RedirectToAction("Index", "Home");
                 }
+                else
+                {
+                    ModelState.AddModelError("", "This username or email already exists");
+                }
+            }
 
-                // If we got this far, something failed, redisplay form
-                return View(model);
-            }
-            else
-            {
-                return new ViewResult { ViewName = "AlreadyLoggedIn" };
-            }
+            // If we got this far, something failed, redisplay form
+            return View(model);
         }
 
         //
