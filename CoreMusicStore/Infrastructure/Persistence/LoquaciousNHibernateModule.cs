@@ -6,6 +6,7 @@ using NHibernate.Cfg;
 using NHibernate.Cfg.Loquacious;
 using NHibernate.Dialect;
 using NHibernate.Driver;
+using NHibernate.Mapping.ByCode;
 using NHibernate.Tool.hbm2ddl;
 using System;
 using System.Collections.Generic;
@@ -17,9 +18,13 @@ using System.Text;
 namespace CoreMusicStore.Infrastructure.Persistence
 {
     public class LoquaciousNHibernateModule<TDialect, TDriver> : NHibernateModule
-          where TDialect : Dialect
-          where TDriver : IDriver
+       where TDialect : Dialect
+       where TDriver : IDriver
     {
+        public string AssemblyRootPath { get; set; }
+
+        public Action<Configuration, IReadOnlyCollection<Type>, IReadOnlyCollection<Type>> OnModelCreating { get; set; } = CreateExplicitHbmMapping;
+
         private readonly HashSet<Assembly> _assemblies = new HashSet<Assembly>();
 
         public string ConnectionStringName { get; set; } = "DefaultConnection";
@@ -39,20 +44,36 @@ namespace CoreMusicStore.Infrastructure.Persistence
             var config = new Configuration().DataBaseIntegration(db =>
             {
                 db.Dialect<TDialect>();
-                db.ConnectionStringName = configuration.GetConnectionString(ConnectionStringName);
+                db.ConnectionString = configuration.GetConnectionString(ConnectionStringName);
                 db.Driver<TDriver>();
                 db.BatchSize = 100;
             });
+            foreach (var assembly in AssemblyNames.Distinct())
+            {
+                _assemblies.Add(Assembly.LoadFrom(AssemblyRootPath != null ? Path.Combine(AssemblyRootPath, assembly) : assembly));
+            }
             foreach (var assembly in _assemblies)
             {
                 config.AddAssembly(assembly);
             }
-            foreach (var assembly in AssemblyNames.Distinct())
-            {
-                config.AddAssembly(assembly);
-            }
-
+            var assemblyTypes = _assemblies.SelectMany(q => q.GetTypes()).ToList();
+            var mappings = (from t in assemblyTypes
+                            where t.BaseType != null && t.BaseType.IsGenericType
+                            where typeof(IConformistHoldersProvider).IsAssignableFrom(t)
+                            select t).ToList();
+            OnModelCreating?.Invoke(config, mappings, assemblyTypes);
             return config;
+        }
+
+        private static void CreateExplicitHbmMapping(Configuration configuration, IReadOnlyCollection<Type> mappings, IReadOnlyCollection<Type> assemblyTypes)
+        {
+            if (mappings.Count > 0)
+            {
+                var mapper = new ModelMapper();
+                mapper.AddMappings(mappings);
+                var hbm = mapper.CompileMappingForAllExplicitlyAddedEntities();
+                configuration.AddMapping(hbm);
+            }
         }
     }
 }

@@ -18,20 +18,25 @@ namespace CoreMusicStore.Infrastructure.Persistence
 {
     public abstract class NHibernateModule : Autofac.Module
     {
-        public string RootPath { get; set; }
+        public string SchemaRootPath { get; set; }
 
-        public event EventHandler<ISessionFactory> SessionFactoryCreated;
+        public string SchemaFilename { get; set; } = "db.sql";
+
+        public event EventHandler<ISessionFactory> OnSessionFactoryCreated;
+
+        public event EventHandler<Configuration> OnConfigurationCreated;
 
         protected abstract Configuration BuildConfiguration(IComponentContext context);
 
         private Configuration GetConfiguration(IComponentContext context)
         {
             var config = BuildConfiguration(context);
-            if (!string.IsNullOrEmpty(RootPath))
+            OnConfigurationCreated?.Invoke(this, config);
+            if (!string.IsNullOrEmpty(SchemaRootPath))
             {
                 var schemaExport = new SchemaExport(config);
                 schemaExport
-                .SetOutputFile(Path.Combine(RootPath, "db.sql"))
+                .SetOutputFile(Path.Combine(SchemaRootPath, SchemaFilename))
                 .Execute(true, false, false);
             }
             return config;
@@ -40,7 +45,7 @@ namespace CoreMusicStore.Infrastructure.Persistence
         private ISessionFactory GetSessionFactory(IComponentContext context)
         {
             var sessionFactory = context.Resolve<Configuration>().BuildSessionFactory();
-            SessionFactoryCreated?.Invoke(this, sessionFactory);
+            OnSessionFactoryCreated?.Invoke(this, sessionFactory);
             return sessionFactory;
         }
 

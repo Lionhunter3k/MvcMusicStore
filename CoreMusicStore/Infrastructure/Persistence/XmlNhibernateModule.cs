@@ -25,8 +25,8 @@ namespace CoreMusicStore.Infrastructure.Persistence
             if (!string.IsNullOrEmpty(XmlCfgFileName))
             {
                 var xmlConfigurationFilePath = XmlCfgFileName;
-                if (!string.IsNullOrEmpty(RootPath))
-                    xmlConfigurationFilePath = Path.Combine(RootPath, XmlCfgFileName);
+                if (!string.IsNullOrEmpty(SchemaRootPath))
+                    xmlConfigurationFilePath = Path.Combine(SchemaRootPath, XmlCfgFileName);
                 var nhConfig = new Configuration().Configure(xmlConfigurationFilePath);
                 return nhConfig;
             }
