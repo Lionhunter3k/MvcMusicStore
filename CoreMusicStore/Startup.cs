@@ -39,7 +39,12 @@ namespace CoreMusicStore
             return services.AddAutofacProvider(builder =>
             {
                 //nhibernate
-                var nhibernateModule = new XmlNhibernateModule() { SchemaRootPath = Environment.ContentRootPath, XmlCfgFileName = "hibernate.cfg.mysql.xml" };
+                var nhibernateModule = new XmlNhibernateModule()
+                {
+                    SchemaRootPath = Environment.ContentRootPath,
+                    XmlCfgFileName = "hibernate.cfg.sqlite.xml"
+                };
+                nhibernateModule.OnConfigurationCreated += Seed.CreateSqlSchema;
                 nhibernateModule.OnSessionFactoryCreated += Seed.PopulateDatabase;
                 builder.RegisterModule(nhibernateModule);
 

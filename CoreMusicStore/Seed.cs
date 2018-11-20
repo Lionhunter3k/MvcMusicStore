@@ -1,4 +1,5 @@
 ﻿using MvcMusicStore.Models;
+using NHibernate.Tool.hbm2ddl;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,6 +9,12 @@ namespace CoreMusicStore
 {
     public static class Seed
     {
+        public static void CreateSqlSchema(object sender, NHibernate.Cfg.Configuration cfg)
+        {
+            var schemaExport = new SchemaExport(cfg);
+            schemaExport.Create(false, true);
+        }
+
         public static void PopulateDatabase(object sender, NHibernate.ISessionFactory sessionFactory)
         {
             using (var session = sessionFactory.OpenSession())
